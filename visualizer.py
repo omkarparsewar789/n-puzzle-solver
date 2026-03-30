@@ -1,11 +1,3 @@
-"""
-Terminal visualization for the N-puzzle.
-
-Two modes:
-  1. Solution replay: steps through the solution path board by board
-  2. Search summary: prints the metrics comparison table
-"""
-
 import os
 import time
 from typing import List, Optional
@@ -14,18 +6,11 @@ from puzzle import PuzzleState
 from metrics import SearchMetrics, print_comparison_table
 
 def _clear() -> None:
-    """Clear the terminal screen."""
     os.system("cls" if os.name == "nt" else "clear")
 
 
 def _board_lines(state: PuzzleState) -> List[str]:
-    """
-    Return the board as a list of strings, one per row.
-    Blank tile shown as ' _', numbers right-aligned to 2 chars.
 
-    Example (3x3):
-      [ ' 1  2  3', ' 4  _  5', ' 7  8  6' ]
-    """
     n = state.n
     lines = []
     for row in range(n):
@@ -38,19 +23,11 @@ def _board_lines(state: PuzzleState) -> List[str]:
 
 
 def _divider(n: int) -> str:
-    """Horizontal divider scaled to board width."""
     width = n * 4 - 1
     return "─" * width
 
 def print_board(state: PuzzleState, label: str = "") -> None:
-    """
-    Print a single board state with an optional label above it.
 
-    Parameters
-    ----------
-    state : PuzzleState to display
-    label : optional header string (e.g. "Initial state")
-    """
     if label:
         print(label)
     print(_divider(state.n))
@@ -58,7 +35,6 @@ def print_board(state: PuzzleState, label: str = "") -> None:
         print(line)
     print(_divider(state.n))
 
-# Solution path
 
 def animate_solution(
     path: List[PuzzleState],
@@ -66,7 +42,7 @@ def animate_solution(
     clear_screen: bool = True,
 ) -> None:
    
-    total_steps = len(path) - 1   # number of moves
+    total_steps = len(path) - 1 
 
     for i, state in enumerate(path):
         if clear_screen:
@@ -101,11 +77,10 @@ def print_solution_path(path: List[PuzzleState]) -> None:
 
         print_board(state, label=label)
         if i < len(path) - 1:
-            print()   # blank line between boards
+            print()
 
     print(f"\nSolved in {total_steps} move{'s' if total_steps != 1 else ''}.")
 
-# Metrics display
 
 def print_metrics(metrics: SearchMetrics) -> None:
     """Print a single algorithm's SearchMetrics in a clean block."""
@@ -128,7 +103,6 @@ def print_search_summary(
     print(f"  {metrics.algorithm}  |  Heuristic: {metrics.heuristic}")
     print("=" * 50)
 
-    # Show initial and goal side by side
     init_lines = _board_lines(initial)
     goal_lines = _board_lines(goal)
     n = initial.n
@@ -140,7 +114,6 @@ def print_search_summary(
         print(il + pad + gl)
     print(_divider(n) + pad + _divider(n))
 
-    # Status
     if solution is None:
         print("\nNo solution found.")
         print_metrics(metrics)
@@ -148,7 +121,6 @@ def print_search_summary(
 
     print_metrics(metrics)
 
-    # Solution path
     if show_path and solution is not None:
         path = solution.get_path()
         print(f"\nSolution path ({len(path) - 1} moves):")
@@ -157,7 +129,7 @@ def print_search_summary(
         else:
             print_solution_path(path)
 
-# Comparison table
+
 
 def print_algorithm_comparison(
     initial: PuzzleState,
@@ -168,8 +140,6 @@ def print_algorithm_comparison(
     print("\n" + "=" * 60)
     print("  Algorithm Comparison")
     print("=" * 60)
-
-    # Print the puzzle being solved
     print("\nPuzzle:")
     print_board(initial)
     print()
