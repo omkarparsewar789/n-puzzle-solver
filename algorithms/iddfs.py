@@ -1,52 +1,9 @@
-"""
-algorithms/iddfs.py
--------------------
-Iterative Deepening Depth-First Search for the N-puzzle.
-
-Properties (from D2):
-  Time complexity  : O(b^d)       -- same as BFS asymptotically
-  Space complexity : O(b * d)     -- LINEAR, only stores current path
-  Complete         : Yes — depth limit increases until solution found
-  Optimal          : Yes — finds shallowest solution first (like BFS)
-
-Key difference from BFS (D2 justification):
-  IDDFS trades time for space. It re-expands upper levels on each
-  iteration, but the majority of nodes are always at the deepest level,
-  so the overhead is bounded by b/(b-1) — a constant factor.
-
-  The critical advantage: peak_frontier_size stays at O(b * d),
-  making it viable for deeper searches where BFS exhausts RAM.
-
-  This is the uninformed baseline for Level 2 and the foundation
-  that IDA* is built upon (same depth-first structure, just with
-  an f-cost limit instead of a depth limit).
-
-Cycle detection:
-  IDDFS only checks against states on the CURRENT PATH (not a global
-  explored set). This keeps space at O(b*d) but means the same state
-  can be visited across different paths. This is intentional and correct
-  for the space complexity claim in D2.
-"""
-
 import time
 from puzzle import PuzzleState
 from metrics import SearchMetrics
 
 
 def iddfs(initial: PuzzleState, goal: PuzzleState) -> tuple[PuzzleState | None, SearchMetrics]:
-    """
-    Solve the N-puzzle using Iterative Deepening Depth-First Search.
-
-    Parameters
-    initial : starting PuzzleState
-    goal    : goal PuzzleState
-
-    Returns
-    (solution, metrics)
-      solution : PuzzleState at the goal (follow .parent for path),
-                 or None if no solution exists
-      metrics  : SearchMetrics with node counts, memory usage, timing
-    """
     start_time = time.perf_counter()
     metrics = SearchMetrics(algorithm="IDDFS", heuristic="none")
 
@@ -115,10 +72,6 @@ def _depth_limited_search(
         # Cycle check: skip if this board is already on the current path
         if neighbor.board in path_set:
             continue
-
-        # Track frontier size: at any DFS level, frontier = unexpanded siblings on current path. Approximated here as the number of neighbors minus already-visited ones.
-        # For space complexity evidence we track peak_path_length (above) which directly shows the O(b*d) linear memory claim.
-
         # Recurse deeper
         path_set.add(neighbor.board)
         result = _depth_limited_search(
