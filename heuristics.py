@@ -1,34 +1,10 @@
-"""
-Admissible heuristic functions for the N-puzzle, as defined and proved in D1:
-
-Heuristic 1 — Manhattan Distance (hMD):
-    Sum of |row_current - row_goal| + |col_current - col_goal|
-    for every non-blank tile.
-
-Heuristic 2 — Linear Conflict (hLC):
-    hLC(n) = hMD(n) + 2 * C(n)
-    where C(n) = total number of linear conflicts on the board.
-    A linear conflict exists when two tiles are both in their goal
-    row (or column) but in reversed order, forcing at least 2 extra moves.
-
-    Dominance: hLC >= hMD for all states (C(n) >= 0 always).
-
-Note: Misplaced tiles (heuristic 0) is also added for Level 1.
-"""
-
 from typing import Tuple
 from puzzle import PuzzleState
 
-# Goal position lookup — precomputed for efficiency
+# goal position lookup — precomputed for efficiency
 
 def _build_goal_positions(goal: PuzzleState) -> dict:
-    """
-    Precompute a mapping: tile_value -> (row, col) in the goal state.
-    Excludes the blank (0).
 
-    This avoids recomputing goal positions on every heuristic call,
-    which matters when heuristics are called millions of times in IDA*.
-    """
     positions = {}
     n = goal.n
     for idx, tile in enumerate(goal.board):
@@ -36,7 +12,6 @@ def _build_goal_positions(goal: PuzzleState) -> dict:
             positions[tile] = (idx // n, idx % n)
     return positions
 
-# Heuristic 1: Manhattan Distance
 
 def manhattan_distance(state: PuzzleState, goal: PuzzleState) -> int:
 
@@ -54,30 +29,11 @@ def manhattan_distance(state: PuzzleState, goal: PuzzleState) -> int:
     return total
 
 
-
-# Linear Conflict helpers
-
 def _count_row_conflicts(state: PuzzleState, goal_positions: dict) -> int:
-    """
-    Count linear conflicts across all rows.
-
-    Two tiles ta and tb are in a row conflict if:
-      - Both are in the same current row
-      - Both have their goal position in that same row
-      - ta is to the left of tb currently, but ta's goal is to the
-        right of tb's goal (i.e. they need to pass each other)
-
-    Each such conflict requires 2 extra moves beyond Manhattan distance.
-
-    Returns
-    -------
-    Total number of row conflicts (each pair counted once).
-    """
     n = state.n
     conflicts = 0
 
     for row in range(n):
-        # Collect tiles currently in this row that also belong here in goal
         row_tiles = []
         for col in range(n):
             tile = state.board[row * n + col]
@@ -85,10 +41,8 @@ def _count_row_conflicts(state: PuzzleState, goal_positions: dict) -> int:
                 continue
             goal_row, goal_col = goal_positions[tile]
             if goal_row == row:
-                # tile is in its goal row — record (current_col, goal_col)
                 row_tiles.append((col, goal_col))
 
-        # Count inversions among goal columns of these tiles
         for i in range(len(row_tiles)):
             for j in range(i + 1, len(row_tiles)):
                 curr_col_i, goal_col_i = row_tiles[i]
@@ -101,23 +55,11 @@ def _count_row_conflicts(state: PuzzleState, goal_positions: dict) -> int:
 
 
 def _count_col_conflicts(state: PuzzleState, goal_positions: dict) -> int:
-    """
-    Count linear conflicts across all columns.
-
-    Mirror of _count_row_conflicts but operating on columns:
-      - Both tiles in the same current column
-      - Both have their goal in that same column
-      - The one higher up currently needs to end up lower (reversed order)
-
-    Returns
-    -------
-    Total number of column conflicts (each pair counted once).
-    """
     n = state.n
     conflicts = 0
 
     for col in range(n):
-        # Collect tiles currently in this column that also belong here in goal
+        # collect tiles currently in this column that also belong here in goal
         col_tiles = []
         for row in range(n):
             tile = state.board[row * n + col]
@@ -156,7 +98,7 @@ def linear_conflict(state: PuzzleState, goal: PuzzleState) -> int:
 # Heuristic 0: Misplaced Tiles (for Level 1 completeness)
 
 def misplaced_tiles(state: PuzzleState, goal: PuzzleState) -> int:
-    # Count the number of tiles not in their goal position (blank excluded).
+
 
     return sum(
         1
