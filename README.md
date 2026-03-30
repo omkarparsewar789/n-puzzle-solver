@@ -25,7 +25,7 @@ This solver scales through three distinct levels of complexity:
 
 Table reflects theoretical properties for the N-puzzle with uniform step costs.
 
-##  Requirements & Installation
+##  Setup Instructions
 
 This project is built using strictly standard Python libraries. No external dependencies are required.
 
@@ -37,20 +37,8 @@ Simply clone the repository and run the CLI directly.
 
 The solver is orchestrated via `main.py`. It includes an interactive terminal visualizer and an empirical metrics tracker for performance comparison.
 
-### Basic Algorithm Execution
-Run a specific algorithm on a random, guaranteed-solvable 8-puzzle:
-```bash
-python main.py --size 3 --random --algo astar --heuristic linear_conflict
-```
-
-### Animate the Solution Path
-Watch the agent solve the puzzle step-by-step in the terminal:
-```bash
-python main.py --size 3 --random --algo idastar --heuristic linear_conflict --animate --delay 0.4
-```
-
-### Solve a Specific Board
-Pass a custom scrambled state using a space-separated list (0 represents the blank tile):
+### Basic Execution
+Pass a custom initial state using a space-separated list (0 represents the blank tile):
 ```bash
 python main.py --size 3 --puzzle 8 6 7 2 5 4 3 0 1 --algo astar --heuristic manhattan
 ```
@@ -60,7 +48,47 @@ Run a side-by-side empirical analysis of all algorithms to compare nodes expande
 ```bash
 python main.py --size 3 --compare
 ```
+
+### Animate the Solution Path
+Watch the agent solve the puzzle step-by-step in the terminal:
+```bash
+python main.py --size 3 --random --algo idastar --heuristic linear_conflict --animate --delay 0.4
+```
+
 > Note: For `size > 3` (the 15-puzzle), the script automatically safely disables BFS and IDDFS to prevent memory crashes.
+
+### Available Flags
+
+- `--size`  
+  Grid size of the puzzle.  
+  `3` → 8-puzzle (default)  
+  `4` → 15-puzzle  
+
+- `--algo`  
+  Search algorithm to use:  
+  `bfs` → Breadth-First Search  
+  `iddfs` → Iterative Deepening DFS  
+  `astar` → A* Search (default)  
+  `idastar` → Iterative Deepening A*  
+
+- `--heuristic`  
+  Heuristic function (only for A* and IDA*):  
+  `misplaced` → Number of misplaced tiles  
+  `manhattan` → Manhattan distance  
+  `linear_conflict` → Manhattan + linear conflict (default)  
+
+- `--puzzle`  
+  Space-separated list of tile values (use `0` for blank).  
+  Must contain exactly `n × n` numbers.  
+
+- `--compare`  
+  Runs multiple algorithms on the same puzzle and prints a comparison table.  
+
+- `--animate`  
+  Animates the solution step-by-step in the terminal.  
+
+- `--delay`  
+  Time delay (in seconds) between animation steps (default: `0.6`).  
 
 ##  Architecture
 
