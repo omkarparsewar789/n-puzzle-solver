@@ -51,8 +51,7 @@ class PuzzleState:
         self.g = g
 
     # ------------------------------------------------------------------
-    # Equality and hashing — based on board only, not path info.
-    # This allows PuzzleState to be stored in sets and dict keys.
+    # Equality and hashing — This allows PuzzleState to be stored in sets and dict keys.
     # ------------------------------------------------------------------
 
     def __eq__(self, other: object) -> bool:
@@ -64,17 +63,14 @@ class PuzzleState:
         return hash(self.board)
 
     # ------------------------------------------------------------------
-    # Comparison for heapq (A* / IDA* priority queues)
-    # Compares boards lexicographically as a tiebreaker.
+    # To compare boards lexicographically.
     # ------------------------------------------------------------------
 
     def __lt__(self, other: "PuzzleState") -> bool:
         return self.board < other.board
 
     # ------------------------------------------------------------------
-    # Neighbour generation — the transition model from D1.
-    # Returns a list of (new_state, action, step_cost) tuples.
-    # step_cost is always 1 (uniform cost).
+    # Neighbour generation
     # ------------------------------------------------------------------
 
     def get_neighbors(self) -> List[Tuple["PuzzleState", str, int]]:
@@ -97,7 +93,7 @@ class PuzzleState:
         for action, dr, dc in moves:
             new_row, new_col = row + dr, col + dc
 
-            # Boundary check (preconditions from D1)
+            # Boundary check
             if not (0 <= new_row < n and 0 <= new_col < n):
                 continue
 
@@ -124,7 +120,7 @@ class PuzzleState:
         return neighbors
 
     # ------------------------------------------------------------------
-    # Goal test predicate — Goal(s) from D1.
+    # Goal test
     # ------------------------------------------------------------------
 
     def is_goal(self, goal: "PuzzleState") -> bool:
@@ -132,7 +128,7 @@ class PuzzleState:
         return self.board == goal.board
 
     # ------------------------------------------------------------------
-    # Path reconstruction — walk parent pointers back to root.
+    # Path reconstruction
     # ------------------------------------------------------------------
 
     def get_path(self) -> List["PuzzleState"]:
@@ -155,7 +151,7 @@ class PuzzleState:
         return [state.action for state in path if state.action is not None]
 
     # ------------------------------------------------------------------
-    # Display helpers
+    # Helpers
     # ------------------------------------------------------------------
 
     def __repr__(self) -> str:
@@ -171,21 +167,9 @@ class PuzzleState:
     def __str__(self) -> str:
         return self.__repr__()
 
-
-# ------------------------------------------------------------------
-# Factory helpers
-# ------------------------------------------------------------------
-
 def make_goal_state(n: int) -> PuzzleState:
     """
-    Build the standard goal state for an N x N puzzle.
-
-    For n=3:  (1, 2, 3, 4, 5, 6, 7, 8, 0)
-      1 2 3
-      4 5 6
-      7 8 _
-
-    For n=4:  (1, 2, ..., 15, 0)
+    Build the standard goal state for an N x N puzzle: (1, 2, ..., N²-1, 0)
     """
     tiles = list(range(1, n * n)) + [0]
     return PuzzleState(board=tuple(tiles), n=n)
@@ -194,15 +178,6 @@ def make_goal_state(n: int) -> PuzzleState:
 def make_initial_state(tiles: List[int], n: int) -> PuzzleState:
     """
     Build an initial state from a flat list of tile values.
-
-    Parameters
-    ----------
-    tiles : flat list of ints, length n*n, containing 0..n*n-1
-    n     : grid side length
-
-    Raises
-    ------
-    ValueError if the tile list is invalid.
     """
     expected = set(range(n * n))
     if set(tiles) != expected or len(tiles) != n * n:
