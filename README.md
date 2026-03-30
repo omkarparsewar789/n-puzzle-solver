@@ -3,7 +3,7 @@ N-Puzzle Solver (AI Search Algorithms)
 
 An intelligent agent designed to solve the NxN sliding tile puzzle (specifically the 8-puzzle and 15-puzzle) using classical graph search algorithms. This project evaluates the fundamental trade-offs between time complexity and space (memory) complexity in automated planning.
 
-## 🚀 Project Scope & Complexity Levels
+##  Project Scope & Complexity Levels
 
 This solver scales through three distinct levels of complexity:
 
@@ -14,7 +14,7 @@ This solver scales through three distinct levels of complexity:
 - Level 3: Tackling the 15-Puzzle
   Scales to the 4x4 grid (over 10.4 trillion reachable states). Utilizes Iterative Deepening A* (IDA*) to achieve linear $O(b \times d)$ space complexity, preventing the RAM exhaustion that causes BFS and standard A* to fail.
 
-## 🧠 Algorithms Implemented
+##  Algorithms Implemented
 
 | Algorithm | Time Complexity | Space Complexity | Complete? | Optimal? |
 | :--- | :--- | :--- | :--- | :--- |
@@ -25,7 +25,7 @@ This solver scales through three distinct levels of complexity:
 
 Table reflects theoretical properties for the N-puzzle with uniform step costs.
 
-## ⚙️ Requirements & Installation
+##  Requirements & Installation
 
 This project is built using strictly standard Python libraries. No external dependencies are required.
 
@@ -33,7 +33,7 @@ This project is built using strictly standard Python libraries. No external depe
 
 Simply clone the repository and run the CLI directly.
 
-## 💻 Usage & CLI Commands
+## Usage & CLI Commands
 
 The solver is orchestrated via `main.py`. It includes an interactive terminal visualizer and an empirical metrics tracker for performance comparison.
 
@@ -55,14 +55,14 @@ Pass a custom scrambled state using a space-separated list (0 represents the bla
 python main.py --size 3 --puzzle 8 6 7 2 5 4 3 0 1 --algo astar --heuristic manhattan
 ```
 
-### 📊 The Comparison Tool (Demo Mode)
+###  The Comparison Tool (Demo Mode)
 Run a side-by-side empirical analysis of all algorithms to compare nodes expanded, peak frontier size, and effective branching factor ($b^*$):
 ```bash
 python main.py --size 3 --compare
 ```
 > Note: For `size > 3` (the 15-puzzle), the script automatically safely disables BFS and IDDFS to prevent memory crashes.
 
-## 🏗️ Architecture
+##  Architecture
 
 - `main.py`: CLI orchestration and state initialization.
 - `puzzle.py`: Core state representation, transition models, and goal testing.
