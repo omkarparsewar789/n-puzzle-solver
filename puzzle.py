@@ -1,14 +1,4 @@
-"""
-State representation for the N-puzzle.
 
-Board is stored as a flat tuple of length N*N.
-Tile 0 represents the blank space.
-Example 8-puzzle: (1, 2, 3, 4, 0, 5, 7, 8, 6)
-  maps to the grid:
-    1 2 3
-    4 _ 5
-    7 8 6
-"""
 
 from __future__ import annotations
 from typing import List, Tuple, Optional
@@ -22,16 +12,7 @@ ACTIONS = {
 
 
 class PuzzleState:
-    """
-    Represents a single state of the N x N sliding tile puzzle.
 
-    board   : tuple of ints, length N*N. 
-    n       : grid side length (3 for 8-puzzle, 4 for 15-puzzle)
-    blank   : flat index of the blank tile (0) in board
-    parent  : the PuzzleState that generated this one (None for root)
-    action  : the action taken from parent to reach this state (None for root)
-    g       : path cost from initial state (number of moves so far)
-    """
 
     __slots__ = ("board", "n", "blank", "parent", "action", "g")
 
@@ -50,10 +31,6 @@ class PuzzleState:
         self.action = action
         self.g = g
 
-    # ------------------------------------------------------------------
-    # Equality and hashing — This allows PuzzleState to be stored in sets and dict keys.
-    # ------------------------------------------------------------------
-
     def __eq__(self, other: object) -> bool:
         if not isinstance(other, PuzzleState):
             return False
@@ -62,22 +39,13 @@ class PuzzleState:
     def __hash__(self) -> int:
         return hash(self.board)
 
-    # ------------------------------------------------------------------
-    # To compare boards lexicographically.
-    # ------------------------------------------------------------------
 
     def __lt__(self, other: "PuzzleState") -> bool:
         return self.board < other.board
 
-    # ------------------------------------------------------------------
-    # Neighbour generation
-    # ------------------------------------------------------------------
 
     def get_neighbors(self) -> List[Tuple["PuzzleState", str, int]]:
-        """
-        Generates all valid successor states from this state.
-        Returns a list of (PuzzleState, action_name, step_cost) tuples.
-        """
+
         n = self.n
         row, col = divmod(self.blank, n)
         neighbors = []
@@ -93,11 +61,9 @@ class PuzzleState:
         for action, dr, dc in moves:
             new_row, new_col = row + dr, col + dc
 
-            # Boundary check
             if not (0 <= new_row < n and 0 <= new_col < n):
                 continue
 
-            # Swap blank with target tile
             new_blank = new_row * n + new_col
             new_board = list(self.board)
             new_board[self.blank], new_board[new_blank] = (
@@ -114,22 +80,15 @@ class PuzzleState:
                     g=self.g + 1,
                 ),
                 action,
-                1,  # uniform step cost (step_cost is always 1 for the N-puzzle)
+                1, 
             ))
 
         return neighbors
-
-    # ------------------------------------------------------------------
-    # Goal test
-    # ------------------------------------------------------------------
 
     def is_goal(self, goal: "PuzzleState") -> bool:
         """Return True if this state matches the goal state."""
         return self.board == goal.board
 
-    # ------------------------------------------------------------------
-    # Path reconstruction
-    # ------------------------------------------------------------------
 
     def get_path(self) -> List["PuzzleState"]:
         """
@@ -149,10 +108,6 @@ class PuzzleState:
         """
         path = self.get_path()
         return [state.action for state in path if state.action is not None]
-
-    # ------------------------------------------------------------------
-    # Helpers
-    # ------------------------------------------------------------------
 
     def __repr__(self) -> str:
         rows = []
