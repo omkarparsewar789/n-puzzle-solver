@@ -40,19 +40,7 @@ def _depth_limited_search(
     path_set: set,
     metrics: SearchMetrics,
 ) -> PuzzleState | None:
-    """
-    Recursive depth-limited DFS from node up to depth_limit.
 
-    Parameters
-    node        : current PuzzleState being expanded
-    goal        : goal PuzzleState
-    depth_limit : maximum depth to explore in this iteration
-    path_set    : set of board tuples on the current path (cycle detection)
-    metrics     : SearchMetrics being updated in place
-
-    Returns
-    PuzzleState at goal if found, None otherwise.
-    """
     # Track peak path length for O(b*d) space claim
     metrics.update_peak_path(node.g)
 
