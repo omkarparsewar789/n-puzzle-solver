@@ -43,7 +43,7 @@ Pass a custom initial state using a space-separated list (0 represents the blank
 python main.py --size 3 --puzzle 8 6 7 2 5 4 3 0 1 --algo astar --heuristic manhattan
 ```
 
-###  The Comparison Tool (Demo Mode)
+### Compare Flag 
 Run a side-by-side empirical analysis of all algorithms to compare nodes expanded, peak frontier size, and effective branching factor ($b^*$):
 ```bash
 python main.py --size 3 --compare
@@ -99,4 +99,7 @@ python main.py --size 3 --random --algo idastar --heuristic linear_conflict --an
 - `metrics.py`: Dataclass tracking time, space, and effective branching factors.
 - `visualizer.py`: Zero-dependency terminal animation and data table formatting.
 - `algorithms/`: Modular directory containing `bfs.py`, `iddfs.py`, `astar.py`, and `idastar.py`.
+- `tests/`: Tests to validate core mechanics: state transitions, heuristic admissibility, solvability math, and algorithm optimality.
+- `benchmark.py`: Script for running predefined scenarios to empirically evaluate performance.
+- `EMPIRICAL VALIDATION.md`: Report analyzing empirical benchmark results against theoretical complexity bounds.
 
