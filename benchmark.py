@@ -1,8 +1,3 @@
-"""
-benchmark.py - Exhaustive empirical validation script for the N-Puzzle solver which demonstrates specific D2 algorithm properties (Completeness, Optimality, 
-Time Complexity, Space Complexity) across all three difficulty levels.
-"""
-
 from puzzle import make_initial_state, make_goal_state
 from solvability import is_solvable, check_and_report
 from heuristics import manhattan_distance, linear_conflict
@@ -47,8 +42,6 @@ if __name__ == "__main__":
     print(m)
 
     # Test 4: BFS vs IDDFS space comparison on same puzzle
-    # Both should find same solution length (optimal)
-    # IDDFS peak_path_length should be << BFS peak_frontier_size
     print("\n=== Test 4: BFS vs IDDFS space comparison ===")
     s = make_initial_state([1, 2, 3, 4, 0, 5, 7, 8, 6], 3)
 
@@ -82,7 +75,6 @@ if __name__ == "__main__":
 
     # Test 6: Mathematical rejection of unsolvable states
     print("\n=== Test 6: Unsolvable state rejection via Inversion Counting ===")
-    # Swapping 1 and 2 on a 3x3 board changes parity, making it mathematically unsolvable
     unsolvable_s = make_initial_state([2, 1, 3, 4, 5, 6, 7, 8, 0], 3)
     solvable, msg = check_and_report(unsolvable_s)
     
@@ -98,7 +90,6 @@ if __name__ == "__main__":
     # Test 7: 15-Puzzle memory bounds (IDA* + Linear Conflict)
     print("\n=== Test 7: 15-Puzzle Solved with O(b*d) Space Limit ===")
     goal_4 = make_goal_state(4)
-    # A moderately shuffled 15-puzzle that would crash standard BFS memory
     tiles_15 = [
         1, 2, 3, 4,
         5, 6, 7, 8,
